@@ -1,1 +1,184 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Glenn-Sha Lights & Sounds Tracker</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: #e5e7eb;
+    }
+    .container { width: min(1100px, 94%); margin: 0 auto; padding: 22px 0 40px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+    .brand h1 { margin: 0; font-size: 28px; color: #ffffff; }
+    .brand p { margin: 6px 0 0; color: #cbd5e1; font-size: 14px; }
+    .badge { background: rgba(34, 197, 94, 0.14); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: bold; }
+    .grid { display: grid; grid-template-columns: 1.05fr 1.4fr; gap: 18px; }
+    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.22); backdrop-filter: blur(8px); }
+    .card-header { padding: 18px 18px 8px; }
+    .card-header h2 { margin: 0; font-size: 20px; color: #ffffff; }
+    .card-header p { margin: 8px 0 0; color: #cbd5e1; font-size: 14px; }
+    .card-body { padding: 18px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .full { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 6px; font-size: 13px; color: #cbd5e1; font-weight: bold; }
+    input, button { width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); padding: 12px; font-size: 14px; }
+    input { background: rgba(255,255,255,0.08); color: #fff; }
+    .expense-box { background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px; }
+    .expense-title { margin-bottom: 10px; color: #86efac; font-weight: bold; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
+    button { cursor: pointer; font-weight: bold; }
+    .btn-primary { background: #22c55e; color: #fff; }
+    .btn-secondary { background: #374151; color: #fff; }
+    .btn-danger { background: #dc2626; color: #fff; }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+    .stat { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; }
+    .stat span { font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    th { color: #86efac; }
+    .row-actions button { font-size: 12px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="topbar">
+    <div class="brand">
+      <h1>Lights & Sounds Tracker</h1>
+      <p>Offline ready</p>
+    </div>
+    <div class="badge">Local Save</div>
+  </div>  <div class="grid"><div class="card">
+  <div class="card-header"><h2>Add Event</h2></div>
+  <div class="card-body">
+    <form id="form">
+      <div class="form-grid">
+        <input type="date" id="date" required>
+        <input type="text" id="event" placeholder="Event" required>
+        <input type="number" id="rate" placeholder="Rate" required>
 
+        <div class="full expense-box">
+          <div class="expense-title">Expenses</div>
+          <div class="form-grid">
+            <input type="number" id="fuel" placeholder="Fuel" value="0">
+            <input type="number" id="salary" placeholder="Salary" value="0">
+            <input type="number" id="rental" placeholder="Rental" value="0">
+            <input type="number" id="food" placeholder="Foods" value="0">
+            <input type="number" id="misc" placeholder="Miscellaneous" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary">Save</button>
+        <button type="button" class="btn-secondary" onclick="form.reset()">Clear</button>
+        <button type="button" class="btn-danger" onclick="clearAll()">Clear All</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h2>Records</h2></div>
+  <div class="card-body">
+
+    <div class="summary-grid">
+      <div class="stat"><span>Events</span><strong id="e">0</strong></div>
+      <div class="stat"><span>Income</span><strong id="i">0</strong></div>
+      <div class="stat"><span>Expense</span><strong id="x">0</strong></div>
+      <div class="stat"><span>Net</span><strong id="n">0</strong></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Event</th>
+          <th>Rate</th>
+          <th>Fuel</th>
+          <th>Salary</th>
+          <th>Rental</th>
+          <th>Food</th>
+          <th>Misc</th>
+          <th>Total Exp</th>
+          <th>Net</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="list"></tbody>
+    </table>
+
+  </div>
+</div>
+
+  </div>
+</div><script>
+let data = JSON.parse(localStorage.getItem("tracker")||"[]")
+
+function save(){ localStorage.setItem("tracker", JSON.stringify(data)) }
+
+function totalExp(r){ return r.fuel+r.salary+r.rental+r.food+r.misc }
+function net(r){ return r.rate-totalExp(r) }
+
+function render(){
+  let list=document.getElementById("list")
+  list.innerHTML=""
+
+  let income=0, expense=0
+
+  data.forEach((r,i)=>{
+    income+=r.rate
+    expense+=totalExp(r)
+
+    list.innerHTML+=`<tr>
+      <td>${r.date}</td>
+      <td>${r.event}</td>
+      <td>${r.rate}</td>
+      <td>${r.fuel}</td>
+      <td>${r.salary}</td>
+      <td>${r.rental}</td>
+      <td>${r.food}</td>
+      <td>${r.misc}</td>
+      <td>${totalExp(r)}</td>
+      <td>${net(r)}</td>
+      <td><button onclick="del(${i})">X</button></td>
+    </tr>`
+  })
+
+  document.getElementById("e").innerText=data.length
+  document.getElementById("i").innerText=income
+  document.getElementById("x").innerText=expense
+  document.getElementById("n").innerText=income-expense
+}
+
+function del(i){ data.splice(i,1); save(); render() }
+function clearAll(){ data=[]; save(); render() }
+
+form.onsubmit=(e)=>{
+  e.preventDefault()
+
+  let r={
+    date:date.value,
+    event:event.value,
+    rate:+rate.value,
+    fuel:+fuel.value,
+    salary:+salary.value,
+    rental:+rental.value,
+    food:+food.value,
+    misc:+misc.value
+  }
+
+  data.push(r)
+  save()
+  render()
+  form.reset()
+}
+
+render()
+</script></body>
+</html>
