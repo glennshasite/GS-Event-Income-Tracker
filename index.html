@@ -1,184 +1,804 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
-  <title>Glenn-Sha Lights & Sounds Tracker</title>
+  <title>GS Income Tracker</title>
+
   <style>
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
       color: #e5e7eb;
     }
-    .container { width: min(1100px, 94%); margin: 0 auto; padding: 22px 0 40px; }
-    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
-    .brand h1 { margin: 0; font-size: 28px; color: #ffffff; }
-    .brand p { margin: 6px 0 0; color: #cbd5e1; font-size: 14px; }
-    .badge { background: rgba(34, 197, 94, 0.14); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: bold; }
-    .grid { display: grid; grid-template-columns: 1.05fr 1.4fr; gap: 18px; }
-    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; box-shadow: 0 10px 24px rgba(0,0,0,0.22); backdrop-filter: blur(8px); }
-    .card-header { padding: 18px 18px 8px; }
-    .card-header h2 { margin: 0; font-size: 20px; color: #ffffff; }
-    .card-header p { margin: 8px 0 0; color: #cbd5e1; font-size: 14px; }
-    .card-body { padding: 18px; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .full { grid-column: 1 / -1; }
-    label { display: block; margin-bottom: 6px; font-size: 13px; color: #cbd5e1; font-weight: bold; }
-    input, button { width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); padding: 12px; font-size: 14px; }
-    input { background: rgba(255,255,255,0.08); color: #fff; }
-    .expense-box { background: rgba(255,255,255,0.04); border-radius: 16px; padding: 14px; }
-    .expense-title { margin-bottom: 10px; color: #86efac; font-weight: bold; }
-    .actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
-    button { cursor: pointer; font-weight: bold; }
-    .btn-primary { background: #22c55e; color: #fff; }
-    .btn-secondary { background: #374151; color: #fff; }
-    .btn-danger { background: #dc2626; color: #fff; }
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
-    .stat { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; }
-    .stat span { font-size: 12px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    th { color: #86efac; }
-    .row-actions button { font-size: 12px; }
+
+    .container {
+      width: min(1150px, 94%);
+      margin: 0 auto;
+      padding: 22px 0 40px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-box img {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #ffffff;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .badge {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.45fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(8px);
+    }
+
+    .card-header {
+      padding: 18px 18px 8px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #ffffff;
+    }
+
+    .card-header p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: bold;
+    }
+
+    input,
+    button {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 12px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    .expense-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .expense-title {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: #86efac;
+      font-weight: bold;
+      letter-spacing: 0.3px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fecaca;
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .stat span {
+      display: block;
+      color: #cbd5e1;
+      font-size: 12px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      color: #ffffff;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .table-tools {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1120px;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.03);
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    th {
+      background: rgba(255,255,255,0.06);
+      color: #86efac;
+    }
+
+    td small {
+      color: #cbd5e1;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mini-btn {
+      width: auto;
+      padding: 8px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 26px 16px;
+      color: #cbd5e1;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: #94a3b8;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .install-tip {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.22);
+      color: #dcfce7;
+      font-size: 13px;
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .table-tools {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 22px;
+      }
+
+      .container {
+        width: min(96%, 1150px);
+      }
+
+      .brand-box img {
+        width: 46px;
+        height: 46px;
+      }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="topbar">
-    <div class="brand">
-      <h1>Lights & Sounds Tracker</h1>
-      <p>Offline ready</p>
-    </div>
-    <div class="badge">Local Save</div>
-  </div>  <div class="grid"><div class="card">
-  <div class="card-header"><h2>Add Event</h2></div>
-  <div class="card-body">
-    <form id="form">
-      <div class="form-grid">
-        <input type="date" id="date" required>
-        <input type="text" id="event" placeholder="Event" required>
-        <input type="number" id="rate" placeholder="Rate" required>
-
-        <div class="full expense-box">
-          <div class="expense-title">Expenses</div>
-          <div class="form-grid">
-            <input type="number" id="fuel" placeholder="Fuel" value="0">
-            <input type="number" id="salary" placeholder="Salary" value="0">
-            <input type="number" id="rental" placeholder="Rental" value="0">
-            <input type="number" id="food" placeholder="Foods" value="0">
-            <input type="number" id="misc" placeholder="Miscellaneous" value="0">
-          </div>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand-box">
+        <img src="logo.png" alt="GS Logo" onerror="this.style.display='none';">
+        <div class="brand">
+          <h1>GS Income Tracker</h1>
+          <p>Offline-ready Lights & Sounds income and expense tracker</p>
         </div>
       </div>
-
-      <div class="actions">
-        <button class="btn-primary">Save</button>
-        <button type="button" class="btn-secondary" onclick="form.reset()">Clear</button>
-        <button type="button" class="btn-danger" onclick="clearAll()">Clear All</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="card">
-  <div class="card-header"><h2>Records</h2></div>
-  <div class="card-body">
-
-    <div class="summary-grid">
-      <div class="stat"><span>Events</span><strong id="e">0</strong></div>
-      <div class="stat"><span>Income</span><strong id="i">0</strong></div>
-      <div class="stat"><span>Expense</span><strong id="x">0</strong></div>
-      <div class="stat"><span>Net</span><strong id="n">0</strong></div>
+      <div class="badge">Saved in this browser</div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Event</th>
-          <th>Rate</th>
-          <th>Fuel</th>
-          <th>Salary</th>
-          <th>Rental</th>
-          <th>Food</th>
-          <th>Misc</th>
-          <th>Total Exp</th>
-          <th>Net</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="list"></tbody>
-    </table>
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h2 id="formTitle">Add Event Record</h2>
+          <p>Enter your event details, rate, and expenses.</p>
+        </div>
 
+        <div class="card-body">
+          <form id="trackerForm">
+            <div class="form-grid">
+              <div>
+                <label for="date">Date</label>
+                <input type="date" id="date" required />
+              </div>
+
+              <div>
+                <label for="event">Event</label>
+                <input type="text" id="event" placeholder="Birthday, Wedding, Debut..." required />
+              </div>
+
+              <div class="full">
+                <label for="client">Client / Notes</label>
+                <input type="text" id="client" placeholder="Optional" />
+              </div>
+
+              <div>
+                <label for="rate">Rate</label>
+                <input type="number" id="rate" min="0" step="0.01" placeholder="0.00" required />
+              </div>
+
+              <div>
+                <label for="monthFilterTag">Month Tag</label>
+                <input type="month" id="monthFilterTag" />
+              </div>
+
+              <div class="full expense-box">
+                <div class="expense-title">Expenses</div>
+
+                <div class="form-grid">
+                  <div>
+                    <label for="fuel">Fuel</label>
+                    <input type="number" id="fuel" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="salary">Salary</label>
+                    <input type="number" id="salary" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="rental">Rental</label>
+                    <input type="number" id="rental" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="food">Foods</label>
+                    <input type="number" id="food" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div class="full">
+                    <label for="misc">Other Miscellaneous Expenses</label>
+                    <input type="number" id="misc" min="0" step="0.01" value="0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary" id="saveBtn">Save Record</button>
+              <button type="button" class="btn-secondary" id="resetBtn">Clear Form</button>
+              <button type="button" class="btn-danger" id="clearAllBtn">Clear All Data</button>
+            </div>
+          </form>
+
+          <div class="install-tip">
+            Tip: Upload this as <b>index.html</b> in GitHub Pages. You can also place your logo as <b>logo.png</b> in the same folder.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Summary & Records</h2>
+          <p>Automatic totals based on your saved records.</p>
+        </div>
+
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="stat">
+              <span>Total Events</span>
+              <strong id="totalEvents">0</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Income</span>
+              <strong id="totalIncome">₱ 0.00</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Expense</span>
+              <strong id="totalExpense">₱ 0.00</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Net</span>
+              <strong id="totalNet">₱ 0.00</strong>
+            </div>
+          </div>
+
+          <div class="table-tools">
+            <input type="text" id="searchInput" placeholder="Search event, date, or client/notes" />
+            <input type="month" id="monthFilter" />
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Event</th>
+                  <th>Client / Notes</th>
+                  <th>Rate</th>
+                  <th>Fuel</th>
+                  <th>Salary</th>
+                  <th>Rental</th>
+                  <th>Foods</th>
+                  <th>Misc</th>
+                  <th>Total Expense</th>
+                  <th>Net</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody">
+                <tr>
+                  <td colspan="12" class="empty-state">No records yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="actions" style="margin-top: 14px;">
+            <button type="button" class="btn-secondary" id="exportBtn">Export Backup</button>
+            <button type="button" class="btn-secondary" id="importBtn">Import Backup</button>
+            <input type="file" id="importFile" accept="application/json" style="display:none;" />
+          </div>
+
+          <div class="footer-note">
+            Data is saved in your browser using localStorage. New events automatically update the summary and records table.
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
-</div>
 
-  </div>
-</div><script>
-let data = JSON.parse(localStorage.getItem("tracker")||"[]")
+  <script>
+    const STORAGE_KEY = "gs_income_tracker_v1";
+    let records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let editId = null;
 
-function save(){ localStorage.setItem("tracker", JSON.stringify(data)) }
+    const form = document.getElementById("trackerForm");
+    const dateInput = document.getElementById("date");
+    const eventInput = document.getElementById("event");
+    const clientInput = document.getElementById("client");
+    const rateInput = document.getElementById("rate");
+    const monthFilterTagInput = document.getElementById("monthFilterTag");
+    const fuelInput = document.getElementById("fuel");
+    const salaryInput = document.getElementById("salary");
+    const rentalInput = document.getElementById("rental");
+    const foodInput = document.getElementById("food");
+    const miscInput = document.getElementById("misc");
 
-function totalExp(r){ return r.fuel+r.salary+r.rental+r.food+r.misc }
-function net(r){ return r.rate-totalExp(r) }
+    const recordsBody = document.getElementById("recordsBody");
+    const totalEvents = document.getElementById("totalEvents");
+    const totalIncome = document.getElementById("totalIncome");
+    const totalExpense = document.getElementById("totalExpense");
+    const totalNet = document.getElementById("totalNet");
 
-function render(){
-  let list=document.getElementById("list")
-  list.innerHTML=""
+    const searchInput = document.getElementById("searchInput");
+    const monthFilter = document.getElementById("monthFilter");
+    const formTitle = document.getElementById("formTitle");
+    const saveBtn = document.getElementById("saveBtn");
+    const importFile = document.getElementById("importFile");
 
-  let income=0, expense=0
+    function formatPeso(value) {
+      return new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP"
+      }).format(Number(value || 0));
+    }
 
-  data.forEach((r,i)=>{
-    income+=r.rate
-    expense+=totalExp(r)
+    function toNumber(value) {
+      return Number(value) || 0;
+    }
 
-    list.innerHTML+=`<tr>
-      <td>${r.date}</td>
-      <td>${r.event}</td>
-      <td>${r.rate}</td>
-      <td>${r.fuel}</td>
-      <td>${r.salary}</td>
-      <td>${r.rental}</td>
-      <td>${r.food}</td>
-      <td>${r.misc}</td>
-      <td>${totalExp(r)}</td>
-      <td>${net(r)}</td>
-      <td><button onclick="del(${i})">X</button></td>
-    </tr>`
-  })
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
 
-  document.getElementById("e").innerText=data.length
-  document.getElementById("i").innerText=income
-  document.getElementById("x").innerText=expense
-  document.getElementById("n").innerText=income-expense
-}
+    function getExpenseTotal(record) {
+      return (
+        toNumber(record.fuel) +
+        toNumber(record.salary) +
+        toNumber(record.rental) +
+        toNumber(record.food) +
+        toNumber(record.misc)
+      );
+    }
 
-function del(i){ data.splice(i,1); save(); render() }
-function clearAll(){ data=[]; save(); render() }
+    function getNet(record) {
+      return toNumber(record.rate) - getExpenseTotal(record);
+    }
 
-form.onsubmit=(e)=>{
-  e.preventDefault()
+    function resetForm() {
+      form.reset();
+      fuelInput.value = 0;
+      salaryInput.value = 0;
+      rentalInput.value = 0;
+      foodInput.value = 0;
+      miscInput.value = 0;
+      editId = null;
+      formTitle.textContent = "Add Event Record";
+      saveBtn.textContent = "Save Record";
+      if (!dateInput.value) {
+        dateInput.valueAsDate = new Date();
+      }
+    }
 
-  let r={
-    date:date.value,
-    event:event.value,
-    rate:+rate.value,
-    fuel:+fuel.value,
-    salary:+salary.value,
-    rental:+rental.value,
-    food:+food.value,
-    misc:+misc.value
-  }
+    function getFilteredRecords() {
+      const search = searchInput.value.trim().toLowerCase();
+      const month = monthFilter.value;
 
-  data.push(r)
-  save()
-  render()
-  form.reset()
-}
+      return records
+        .filter((record) => {
+          const searchableText = [
+            record.date || "",
+            record.event || "",
+            record.client || ""
+          ].join(" ").toLowerCase();
 
-render()
-</script></body>
+          const matchesSearch = searchableText.includes(search);
+          const recordMonth = (record.date || "").slice(0, 7);
+          const matchesMonth = !month || recordMonth === month;
+
+          return matchesSearch && matchesMonth;
+        })
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    function updateSummary(filtered) {
+      const income = filtered.reduce((sum, item) => sum + toNumber(item.rate), 0);
+      const expense = filtered.reduce((sum, item) => sum + getExpenseTotal(item), 0);
+      const net = income - expense;
+
+      totalEvents.textContent = filtered.length;
+      totalIncome.textContent = formatPeso(income);
+      totalExpense.textContent = formatPeso(expense);
+      totalNet.textContent = formatPeso(net);
+    }
+
+    function renderRecords() {
+      const filtered = getFilteredRecords();
+
+      if (!filtered.length) {
+        recordsBody.innerHTML = `
+          <tr>
+            <td colspan="12" class="empty-state">No matching records.</td>
+          </tr>
+        `;
+      } else {
+        recordsBody.innerHTML = filtered.map((record) => {
+          const expense = getExpenseTotal(record);
+          const net = getNet(record);
+
+          return `
+            <tr>
+              <td>${record.date || ""}</td>
+              <td>${record.event || "No Event"}</td>
+              <td><small>${record.client || "-"}</small></td>
+              <td>${formatPeso(record.rate)}</td>
+              <td>${formatPeso(record.fuel)}</td>
+              <td>${formatPeso(record.salary)}</td>
+              <td>${formatPeso(record.rental)}</td>
+              <td>${formatPeso(record.food)}</td>
+              <td>${formatPeso(record.misc)}</td>
+              <td>${formatPeso(expense)}</td>
+              <td>${formatPeso(net)}</td>
+              <td>
+                <div class="row-actions">
+                  <button class="mini-btn btn-secondary" onclick="editRecord('${record.id}')">Edit</button>
+                  <button class="mini-btn btn-danger" onclick="deleteRecord('${record.id}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      updateSummary(filtered);
+    }
+
+    function addOrUpdateRecord(e) {
+      e.preventDefault();
+
+      const date = dateInput.value;
+      const eventName = eventInput.value.trim() || "No Event";
+      const client = clientInput.value.trim();
+      const rate = toNumber(rateInput.value);
+      const fuel = toNumber(fuelInput.value);
+      const salary = toNumber(salaryInput.value);
+      const rental = toNumber(rentalInput.value);
+      const food = toNumber(foodInput.value);
+      const misc = toNumber(miscInput.value);
+
+      if (!date) {
+        alert("Please enter a date.");
+        return;
+      }
+
+      const record = {
+        id: editId || String(Date.now()),
+        date,
+        event: eventName,
+        client,
+        rate,
+        fuel,
+        salary,
+        rental,
+        food,
+        misc,
+        monthTag: monthFilterTagInput.value || date.slice(0, 7)
+      };
+
+      if (editId) {
+        records = records.map((item) => item.id === editId ? record : item);
+      } else {
+        records.push(record);
+      }
+
+      saveToStorage();
+      renderRecords();
+      resetForm();
+    }
+
+    window.editRecord = function(id) {
+      const record = records.find((item) => item.id === id);
+      if (!record) return;
+
+      editId = id;
+      dateInput.value = record.date || "";
+      eventInput.value = record.event || "";
+      clientInput.value = record.client || "";
+      rateInput.value = record.rate || 0;
+      fuelInput.value = record.fuel || 0;
+      salaryInput.value = record.salary || 0;
+      rentalInput.value = record.rental || 0;
+      foodInput.value = record.food || 0;
+      miscInput.value = record.misc || 0;
+      monthFilterTagInput.value = record.monthTag || "";
+
+      formTitle.textContent = "Update Event Record";
+      saveBtn.textContent = "Update Record";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.deleteRecord = function(id) {
+      const confirmed = confirm("Delete this record?");
+      if (!confirmed) return;
+
+      records = records.filter((item) => item.id !== id);
+      saveToStorage();
+      renderRecords();
+
+      if (editId === id) {
+        resetForm();
+      }
+    };
+
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+    document.getElementById("clearAllBtn").addEventListener("click", () => {
+      const confirmed = confirm("This will delete all saved records in this browser. Continue?");
+      if (!confirmed) return;
+
+      records = [];
+      saveToStorage();
+      renderRecords();
+      resetForm();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(records, null, 2)], {
+        type: "application/json"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "gs-income-tracker-backup.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("importBtn").addEventListener("click", () => {
+      importFile.click();
+    });
+
+    importFile.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        try {
+          const imported = JSON.parse(event.target.result);
+
+          if (!Array.isArray(imported)) {
+            alert("Invalid backup file.");
+            return;
+          }
+
+          records = imported;
+          saveToStorage();
+          renderRecords();
+          resetForm();
+          alert("Backup imported successfully.");
+        } catch (error) {
+          alert("Could not import file.");
+        }
+      };
+
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    searchInput.addEventListener("input", renderRecords);
+    monthFilter.addEventListener("input", renderRecords);
+    form.addEventListener("submit", addOrUpdateRecord);
+
+    if (!dateInput.value) {
+      dateInput.valueAsDate = new Date();
+    }
+
+    renderRecords();
+  </script>
+</body>
 </html>
