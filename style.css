@@ -1,18 +1,32 @@
-/* 🔥 NEON EFFECT */
-.neon-green {
-  color: #22c55e;
-  text-shadow:
-    0 0 5px #22c55e,
-    0 0 10px #22c55e,
-    0 0 20px #22c55e,
-    0 0 40px #22c55e;
+.brand-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.neon-red {
-  color: #ef4444;
-  text-shadow:
-    0 0 5px #ef4444,
-    0 0 10px #ef4444,
-    0 0 20px #ef4444,
-    0 0 40px #ef4444;
+/* 📱 Default (PHONE) */
+.brand-box img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: transparent;
+}
+
+/* 💻 PC / LARGE SCREEN */
+@media (min-width: 768px) {
+  .brand-box img {
+    width: 78px;
+    height: 78px;
+    border-radius: 18px;
+    box-shadow: 0 0 18px rgba(34, 197, 94, 0.2);
+  }
+
+  .brand h1 {
+    font-size: 32px;
+  }
+
+  .brand p {
+    font-size: 16px;
+  }
 }
