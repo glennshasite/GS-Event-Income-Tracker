@@ -79,3 +79,12 @@
   animation: glowRGB 2.2s infinite alternate;
   font-weight: bold;
 }
+.brand-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+.brand {
+  min-width: 0;
+}
