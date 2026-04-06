@@ -1,4 +1,564 @@
-ntal) +
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>GS Income Tracker</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: #e5e7eb;
+    }
+
+    .container {
+      width: min(1150px, 94%);
+      margin: 0 auto;
+      padding: 22px 0 40px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-box img {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #ffffff;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .badge {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1.45fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(8px);
+    }
+
+    .card-header {
+      padding: 18px 18px 8px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #ffffff;
+    }
+
+    .card-header p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: bold;
+    }
+
+    input,
+    button {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 12px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    input {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    .expense-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .expense-title {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: #86efac;
+      font-weight: bold;
+      letter-spacing: 0.3px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fecaca;
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .stat span {
+      display: block;
+      color: #cbd5e1;
+      font-size: 12px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+      color: #ffffff;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .table-tools {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1120px;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.03);
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    th {
+      background: rgba(255,255,255,0.06);
+      color: #86efac;
+    }
+
+    td small {
+      color: #cbd5e1;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mini-btn {
+      width: auto;
+      padding: 8px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 26px 16px;
+      color: #cbd5e1;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: #94a3b8;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .install-tip {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.22);
+      color: #dcfce7;
+      font-size: 13px;
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .table-tools {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 22px;
+      }
+
+      .container {
+        width: min(96%, 1150px);
+      }
+
+      .brand-box img {
+        width: 46px;
+        height: 46px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand-box">
+        <img src="logo.png" alt="GS Logo" onerror="this.style.display='none';">
+        <div class="brand">
+          <h1>GS Income Tracker</h1>
+          <p>Offline-ready Lights & Sounds income and expense tracker</p>
+        </div>
+      </div>
+      <div class="badge">Saved in this browser</div>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h2 id="formTitle">Add Event Record</h2>
+          <p>Enter your event details, rate, and expenses.</p>
+        </div>
+
+        <div class="card-body">
+          <form id="tracke
+                  rForm">
+            <div class="form-grid">
+              <div>
+                <label for="date">Date</label>
+                <input type="date" id="date" required />
+              </div>
+
+              <div>
+                <label for="event">Event</label>
+                <input type="text" id="event" placeholder="Birthday, Wedding, Debut..." required />
+              </div>
+
+              <div class="full">
+                <label for="client">Client / Notes</label>
+                <input type="text" id="client" placeholder="Optional" />
+              </div>
+
+              <div>
+                <label for="rate">Rate</label>
+                <input type="number" id="rate" min="0" step="0.01" placeholder="0.00" required />
+              </div>
+
+              <div>
+                <label for="monthFilterTag">Month Tag</label>
+                <input type="month" id="monthFilterTag" />
+              </div>
+
+              <div class="full expense-box">
+                <div class="expense-title">Expenses</div>
+
+                <div class="form-grid">
+                  <div>
+                    <label for="fuel">Fuel</label>
+                    <input type="number" id="fuel" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="salary">Salary</label>
+                    <input type="number" id="salary" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="rental">Rental</label>
+                    <input type="number" id="rental" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="food">Foods</label>
+                    <input type="number" id="food" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div class="full">
+                    <label for="misc">Other Miscellaneous Expenses</label>
+                    <input type="number" id="misc" min="0" step="0.01" value="0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary" id="saveBtn">Save Record</button>
+              <button type="button" class="btn-secondary" id="resetBtn">Clear Form</button>
+              <button type="button" class="btn-danger" id="clearAllBtn">Clear All Data</button>
+            </div>
+          </form>
+
+          <div class="install-tip">
+            Tip: Upload this as <b>index.html</b> in GitHub Pages. You can also place your logo as <b>logo.png</b> in the same folder.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Summary & Records</h2>
+          <p>Automatic totals based on your saved records.</p>
+        </div>
+
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="stat">
+              <span>Total Events</span>
+              <strong id="totalEvents">0</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Income</span>
+              <strong id="totalIncome">₱ 0.00</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Expense</span>
+              <strong id="totalExpense">₱ 0.00</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Net</span>
+              <strong id="totalNet">₱ 0.00</strong>
+            </div>
+          </div>
+
+          <div class="table-tools">
+            <input type="text" id="searchInput" placeholder="Search event, date, or client/notes" />
+            <input type="month" id="monthFilter" />
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Event</th>
+                  <th>Client / Notes</th>
+                  <th>Rate</th>
+                  <th>Fuel</th>
+                  <th>Salary</th>
+                  <th>Rental</th>
+                  <th>Foods</th>
+                  <th>Misc</th>
+                  <th>Total Expense</th>
+                  <th>Net</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody">
+                <tr>
+                  <td colspan="12" class="empty-state">No records yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="actions" style="margin-top: 14px;">
+            <button type="button" class="btn-secondary" id="exportBtn">Export Backup</button>
+            <button type="button" class="btn-secondary" id="importBtn">Import Backup</button>
+            <input type="file" id="importFile" accept="application/json" style="display:none;" />
+          </div>
+
+          <div class="footer-note">
+            Data is saved in your browser using localStorage. New events automatically update the summary and records table.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "gs_income_tracker_v1";
+    let records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let editId = null;
+
+    const form = document.getElementById("trackerForm");
+    const dateInput = document.getElementById("date");
+    const eventInput = document.getElementById("event");
+    const clientInput = document.getElementById("client");
+    const rateInput = document.getElementById("rate");
+    const monthFilterTagInput = document.getElementById("monthFilterTag");
+    const fuelInput = document.getElementById("fuel");
+    const salaryInput = document.getElementById("salary");
+    const rentalInput = document.getElementById("rental");
+    const foodInput = document.getElementById("food");
+    const miscInput = document.getElementById("misc");
+
+    const recordsBody = document.getElementById("recordsBody");
+    const totalEvents = document.getElementById("totalEvents");
+    const totalIncome = document.getElementById("totalIncome");
+    const totalExpense = document.getElementById("totalExpense");
+    const totalNet = document.getElementById("totalNet");
+
+    const searchInput = document.getElementById("searchInput");
+    const monthFilter = document.getElementById("monthFilter");
+    const formTitle = document.getElementById("formTitle");
+    const saveBtn = document.getElementById("saveBtn");
+    const importFile = document.getElementById("importFile");
+
+    function formatPeso(value) {
+      return new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP"
+      }).format(Number(value || 0));
+    }
+
+    function toNumber(value) {
+      return Number(value) || 0;
+    }
+
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
+
+    function getExpenseTotal(record) {
+      return (
+        toNumber(record.fuel) +
+        toNumber(record.salary) +
+        toNumber(record.re
+                 ntal) +
         toNumber(record.food) +
         toNumber(record.misc)
       );
@@ -235,7 +795,7 @@ ntal) +
     searchInput.addEventListener("input", renderRecords);
     monthFilter.addEventListener("input", renderRecords);
     form.addEv
-    entListener("submit", addOrUpdateRecord);
+          entListener("submit", addOrUpdateRecord);
 
     if (!dateInput.value) {
       dateInput.valueAsDate = new Date();
@@ -245,3 +805,4 @@ ntal) +
   </script>
 </body>
 </html>
+                  
