@@ -368,4 +368,464 @@
         <img src="logo.png" alt="GS Logo" onerror="this.style.display='none';">
         <div class="brand">
           <h1>GS Income Tracker</h1>
-          <p>Offline-ready Lights
+          <p>Offline-ready Lights & Sounds income and expense tracker</p>
+        </div>
+      </div>
+      <div class="badge">Saved in this browser</div>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="card-header">
+          <h2 id="formTitle">Add Event Record</h2>
+          <p>Enter your event details, rate, and expenses.</p>
+        </div>
+
+        <div class="card-body">
+          <form id="trackerForm">
+            <div class="form-grid">
+              <div>
+                <label for="date">Date</label>
+                <input type="date" id="date" required />
+              </div>
+
+              <div>
+                <label for="event">Event</label>
+                <input type="text" id="event" placeholder="Birthday, Wedding, Debut..." required />
+              </div>
+
+              <div class="full">
+                <label for="client">Client / Notes</label>
+                <input type="text" id="client" placeholder="Optional" />
+              </div>
+
+              <div>
+                <label for="rate">Rate</label>
+                <input type="number" id="rate" min="0" step="0.01" placeholder="0.00" required />
+              </div>
+
+              <div>
+                <label for="monthFilterTag">Month Tag</label>
+                <input type="month" id="monthFilterTag" />
+              </div>
+
+              <div class="full expense-box">
+                <div class="expense-title">Expenses</div>
+
+                <div class="form-grid">
+                  <div>
+                    <label for="fuel">Fuel</label>
+                    <input type="number" id="fuel" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="salary">Salary</label>
+                    <input type="number" id="salary" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="rental">Rental</label>
+                    <input type="number" id="rental" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div>
+                    <label for="food">Foods</label>
+                    <input type="number" id="food" min="0" step="0.01" value="0" />
+                  </div>
+
+                  <div class="full">
+                    <label for="misc">Other Miscellaneous Expenses</label>
+                    <input type="number" id="misc" min="0" step="0.01" value="0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn-primary" id="saveBtn">Save Record</button>
+              <button type="button" class="btn-secondary" id="resetBtn">Clear Form</button>
+              <button type="button" class="btn-danger" id="clearAllBtn">Clear All Data</button>
+            </div>
+          </form>
+
+          <div class="install-tip">
+            Tip: Upload this as <b>index.html</b> in GitHub Pages. You can also place your logo as <b>logo.png</b> in the same folder.
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Summary & Records</h2>
+          <p>Automatic totals based on your saved records.</p>
+        </div>
+
+        <div class="card-body">
+          <div class="summary-grid">
+            <div class="stat">
+              <span>Total Events</span>
+              <strong id="totalEvents">0</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Income</span>
+              <strong id="totalIncome">₱ 0.00</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Expense</span>
+              <strong id="totalExpense">₱ 0.00</strong>
+            </div>
+
+            <div class="stat">
+              <span>Total Net</span>
+              <strong id="totalNet" class="neon-green">₱ 0.00</strong>
+            </div>
+          </div>
+
+          <div class="table-tools">
+            <input type="text" id="searchInput" placeholder="Search event, date, or client/notes" />
+            <input type="month" id="monthFilter" />
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Event</th>
+                  <th>Client / Notes</th>
+                  <th>Rate</th>
+                  <th>Fuel</th>
+                  <th>Salary</th>
+                  <th>Rental</th>
+                  <th>Foods</th>
+                  <th>Misc</th>
+                  <th>Total Expense</th>
+                  <th>Net</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recordsBody">
+                <tr>
+                  <td colspan="12" class="empty-state">No records yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="actions" style="margin-top: 14px;">
+            <button type="button" class="btn-secondary" id="exportBtn">Export Backup</button>
+            <button type="button" class="btn-secondary" id="importBtn">Import Backup</button>
+            <input type="file" id="importFile" accept="application/json" style="display:none;" />
+          </div>
+
+          <div class="footer-note">
+            Data is saved in your browser using localStorage. New events automatically update the summary and records table.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "gs_income_tracker_v1";
+    let records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let editId = null;
+
+    const form = document.getElementById("trackerForm");
+    const dateInput = document.getElementById("date");
+    const eventInput = document.getElementById("event");
+    const clientInput = document.getElementById("client");
+    const rateInput = document.getElementById("rate");
+    const monthFilterTagInput = document.getElementById("monthFilterTag");
+    const fuelInput = document.getElementById("fuel");
+    const salaryInput = document.getElementById("salary");
+    const rentalInput = document.getElementById("rental");
+    const foodInput = document.getElementById("food");
+    const miscInput = document.getElementById("misc");
+
+    const recordsBody = document.getElementById("recordsBody");
+    const totalEvents = document.getElementById("totalEvents");
+    const totalIncome = document.getElementById("totalIncome");
+    const totalExpense = document.getElementById("totalExpense");
+    const totalNet = document.getElementById("totalNet");
+
+    const searchInput = document.getElementById("searchInput");
+    const monthFilter = document.getElementById("monthFilter");
+    const formTitle = document.getElementById("formTitle");
+    const saveBtn = document.getElementById("saveBtn");
+    const importFile = document.getElementById("importFile");
+
+    function formatPeso(value) {
+      return new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP"
+      }).format(Number(value || 0));
+    }
+
+    function toNumber(value) {
+      return Number(value) || 0;
+    }
+
+    function saveToStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    }
+
+    function getExpenseTotal(record) {
+      return (
+        toNumber(record.fuel) +
+        toNumber(record.salary) +
+        toNumber(record.rental) +
+        toNumber(record.food) +
+        toNumber(record.misc)
+      );
+    }
+
+    function getNet(record) {
+      return toNumber(record.rate) - getExpenseTotal(record);
+    }
+
+    function resetForm() {
+      form.reset();
+      fuelInput.value = 0;
+      salaryInput.value = 0;
+      rentalInput.value = 0;
+      foodInput.value = 0;
+      miscInput.value = 0;
+      editId = null;
+      formTitle.textContent = "Add Event Record";
+      saveBtn.textContent = "Save Record";
+      if (!dateInput.value) {
+        dateInput.valueAsDate = new Date();
+      }
+    }
+
+    function getFilteredRecords() {
+      const search = searchInput.value.trim().toLowerCase();
+      const month = monthFilter.value;
+
+      return records
+        .filter((record) => {
+          const searchableText = [
+            record.date || "",
+            record.event || "",
+            record.client || ""
+          ].join(" ").toLowerCase();
+
+          const matchesSearch = searchableText.includes(search);
+          const recordMonth = (record.date || "").slice(0, 7);
+          const matchesMonth = !month || recordMonth === month;
+
+          return matchesSearch && matchesMonth;
+        })
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    function updateSummary(filtered) {
+      const income = filtered.reduce((sum, item) => sum + toNumber(item.rate), 0);
+      const expense = filtered.reduce((sum, item) => sum + getExpenseTotal(item), 0);
+      const net = income - expense;
+
+      totalEvents.textContent = filtered.length;
+      totalIncome.textContent = formatPeso(income);
+      totalExpense.textContent = formatPeso(expense);
+
+      if (net >= 0) {
+        totalNet.className = "neon-green";
+      } else {
+        totalNet.className = "neon-red";
+      }
+
+      totalNet.textContent = formatPeso(net);
+    }
+
+    function renderRecords() {
+      const filtered = getFilteredRecords();
+
+      if (!filtered.length) {
+        recordsBody.innerHTML = `
+          <tr>
+            <td colspan="12" class="empty-state">No matching records.</td>
+          </tr>
+        `;
+      } else {
+        recordsBody.innerHTML = filtered.map((record) => {
+          const expense = getExpenseTotal(record);
+          const net = getNet(record);
+
+          return `
+            <tr>
+              <td>${record.date || ""}</td>
+              <td>${record.event || "No Event"}</td>
+              <td><small>${record.client || "-"}</small></td>
+              <td>${formatPeso(record.rate)}</td>
+              <td>${formatPeso(record.fuel)}</td>
+              <td>${formatPeso(record.salary)}</td>
+              <td>${formatPeso(record.rental)}</td>
+              <td>${formatPeso(record.food)}</td>
+              <td>${formatPeso(record.misc)}</td>
+              <td>${formatPeso(expense)}</td>
+              <td class="${net >= 0 ? "neon-green" : "neon-red"}">${formatPeso(net)}</td>
+              <td>
+                <div class="row-actions">
+                  <button class="mini-btn btn-secondary" onclick="editRecord('${record.id}')">Edit</button>
+                  <button class="mini-btn btn-danger" onclick="deleteRecord('${record.id}')">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      updateSummary(filtered);
+    }
+
+    function addOrUpdateRecord(e) {
+      e.preventDefault();
+
+      const date = dateInput.value;
+      const eventName = eventInput.value.trim() || "No Event";
+      const client = clientInput.value.trim();
+      const rate = toNumber(rateInput.value);
+      const fuel = toNumber(fuelInput.value);
+      const salary = toNumber(salaryInput.value);
+      const rental = toNumber(rentalInput.value);
+      const food = toNumber(foodInput.value);
+      const misc = toNumber(miscInput.value);
+
+      if (!date) {
+        alert("Please enter a date.");
+        return;
+      }
+
+      const record = {
+        id: editId || String(Date.now()),
+        date,
+        event: eventName,
+        client,
+        rate,
+        fuel,
+        salary,
+        rental,
+        food,
+        misc,
+        monthTag: monthFilterTagInput.value || date.slice(0, 7)
+      };
+
+      if (editId) {
+        records = records.map((item) => item.id === editId ? record : item);
+      } else {
+        records.push(record);
+      }
+
+      saveToStorage();
+      renderRecords();
+      resetForm();
+    }
+
+    window.editRecord = function(id) {
+      const record = records.find((item) => item.id === id);
+      if (!record) return;
+
+      editId = id;
+      dateInput.value = record.date || "";
+      eventInput.value = record.event || "";
+      clientInput.value = record.client || "";
+      rateInput.value = record.rate || 0;
+      fuelInput.value = record.fuel || 0;
+      salaryInput.value = record.salary || 0;
+      rentalInput.value = record.rental || 0;
+      foodInput.value = record.food || 0;
+      miscInput.value = record.misc || 0;
+      monthFilterTagInput.value = record.monthTag || "";
+
+      formTitle.textContent = "Update Event Record";
+      saveBtn.textContent = "Update Record";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.deleteRecord = function(id) {
+      const confirmed = confirm("Delete this record?");
+      if (!confirmed) return;
+
+      records = records.filter((item) => item.id !== id);
+      saveToStorage();
+      renderRecords();
+
+      if (editId === id) {
+        resetForm();
+      }
+    };
+
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+    document.getElementById("clearAllBtn").addEventListener("click", () => {
+      const confirmed = confirm("This will delete all saved records in this browser. Continue?");
+      if (!confirmed) return;
+
+      records = [];
+      saveToStorage();
+      renderRecords();
+      resetForm();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(records, null, 2)], {
+        type: "application/json"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "gs-income-tracker-backup.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("importBtn").addEventListener("click", () => {
+      importFile.click();
+    });
+
+    importFile.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        try {
+          const imported = JSON.parse(event.target.result);
+
+          if (!Array.isArray(imported)) {
+            alert("Invalid backup file.");
+            return;
+          }
+
+          records = imported;
+          saveToStorage();
+          renderRecords();
+          resetForm();
+          alert("Backup imported successfully.");
+        } catch (error) {
+          alert("Could not import file.");
+        }
+      };
+
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    searchInput.addEventListener("input", renderRecords);
+    monthFilter.addEventListener("input", renderRecords);
+    form.addEventListener("submit", addOrUpdateRecord);
+
+    if (!dateInput.value) {
+      dateInput.valueAsDate = new Date();
+    }
+
+    renderRecords();
+  </script>
+</body>
+</html>
