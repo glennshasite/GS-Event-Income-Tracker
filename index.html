@@ -642,9 +642,10 @@
               <td>${formatPeso(record.food)}</td>
               <td>${formatPeso(record.misc)}</td>
               <td>${formatPeso(expense)}</td>
-              <td>${formatPeso(net)}</td>
-              <td>
-                <div class="row-actions">
+              <td class="${net >= 0 ? 'neon-green' : 'neon-red'}">
+  ${formatPeso(net)}
+</td>
+                    <div class="row-actions">
                   <button class="mini-btn btn-secondary" onclick="editRecord('${record.id}')">Edit</button>
                   <button class="mini-btn btn-danger" onclick="deleteRecord('${record.id}')">Delete</button>
                 </div>
