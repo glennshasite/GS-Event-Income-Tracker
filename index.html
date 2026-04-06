@@ -46,10 +46,17 @@
     .brand-box img {
       width: 52px;
       height: 52px;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 14px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent;
+      border: none;
+      display: block;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .brand h1 {
@@ -299,16 +306,6 @@
       font-size: 13px;
     }
 
-    .neon-green {
-      color: #22c55e !important;
-      text-shadow:
-        0 0 5px #22c55e,
-        0 0 10px #22c55e,
-        0 0 20px #22c55e,
-        0 0 40px #22c55e;
-      font-weight: bold;
-    }
-
     .neon-red {
       color: #ef4444 !important;
       text-shadow:
@@ -317,6 +314,73 @@
         0 0 20px #ef4444,
         0 0 40px #ef4444;
       font-weight: bold;
+    }
+
+    .neon-orange {
+      color: #fb923c !important;
+      text-shadow:
+        0 0 5px #fb923c,
+        0 0 10px #fb923c,
+        0 0 20px #fb923c,
+        0 0 40px #fb923c;
+      font-weight: bold;
+    }
+
+    .neon-rgb {
+      color: #ffffff !important;
+      text-shadow:
+        0 0 5px #ff7a00,
+        0 0 10px #ff7a00,
+        0 0 18px #ff5a00,
+        0 0 28px #ff00aa,
+        0 0 38px #00e5ff;
+      font-weight: bold;
+    }
+
+    @keyframes glowRGB {
+      0% {
+        text-shadow:
+          0 0 5px #ff7a00,
+          0 0 10px #ff7a00,
+          0 0 20px #ff3b00,
+          0 0 30px #ff00aa;
+      }
+      50% {
+        text-shadow:
+          0 0 5px #00e5ff,
+          0 0 10px #00e5ff,
+          0 0 20px #7c3aed,
+          0 0 30px #ff7a00;
+      }
+      100% {
+        text-shadow:
+          0 0 5px #ff7a00,
+          0 0 10px #ff7a00,
+          0 0 20px #ff3b00,
+          0 0 30px #ff00aa;
+      }
+    }
+
+    .neon-logo-match {
+      color: #ffffff !important;
+      animation: glowRGB 2.2s infinite alternate;
+      font-weight: bold;
+    }
+
+    @media (min-width: 768px) {
+      .brand-box img {
+        box-shadow:
+          0 0 10px rgba(255, 122, 0, 0.55),
+          0 0 20px rgba(255, 0, 170, 0.35);
+      }
+
+      .brand h1 {
+        font-size: 32px;
+      }
+
+      .brand p {
+        font-size: 16px;
+      }
     }
 
     @media (max-width: 920px) {
@@ -479,7 +543,7 @@
 
             <div class="stat">
               <span>Total Net</span>
-              <strong id="totalNet" class="neon-green">₱ 0.00</strong>
+              <strong id="totalNet" class="neon-logo-match">₱ 0.00</strong>
             </div>
           </div>
 
@@ -632,7 +696,7 @@
       totalExpense.textContent = formatPeso(expense);
 
       if (net >= 0) {
-        totalNet.className = "neon-green";
+        totalNet.className = "neon-logo-match";
       } else {
         totalNet.className = "neon-red";
       }
@@ -666,7 +730,7 @@
               <td>${formatPeso(record.food)}</td>
               <td>${formatPeso(record.misc)}</td>
               <td>${formatPeso(expense)}</td>
-              <td class="${net >= 0 ? "neon-green" : "neon-red"}">${formatPeso(net)}</td>
+              <td class="${net >= 0 ? "neon-logo-match" : "neon-red"}">${formatPeso(net)}</td>
               <td>
                 <div class="row-actions">
                   <button class="mini-btn btn-secondary" onclick="editRecord('${record.id}')">Edit</button>
