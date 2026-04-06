@@ -610,8 +610,11 @@
       totalEvents.textContent = filtered.length;
       totalIncome.textContent = formatPeso(income);
       totalExpense.textContent = formatPeso(expense);
-      totalNet.textContent = formatPeso(net);
-    }
+      if (net >= 0) {
+  totalNet.innerHTML = `<span class="neon-green">${formatPeso(net)}</span>`;
+} else {
+  totalNet.innerHTML = `<span class="neon-red">${formatPeso(net)}</span>`;
+}
 
     function renderRecords() {
       const filtered = getFilteredRecords();
