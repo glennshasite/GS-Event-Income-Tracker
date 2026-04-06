@@ -25,3 +25,54 @@
     height: 64px;
   }
 }
+/* ===== NEW NEON COLORS - SAFE ADDITION ===== */
+.neon-orange {
+  color: #fb923c !important;
+  text-shadow:
+    0 0 5px #fb923c,
+    0 0 10px #fb923c,
+    0 0 20px #fb923c,
+    0 0 40px #fb923c;
+  font-weight: bold;
+}
+
+.neon-rgb {
+  color: #ffffff !important;
+  text-shadow:
+    0 0 5px #ff7a00,
+    0 0 10px #ff7a00,
+    0 0 18px #ff5a00,
+    0 0 28px #ff00aa,
+    0 0 38px #00e5ff;
+  font-weight: bold;
+}
+
+@keyframes glowRGB {
+  0% {
+    text-shadow:
+      0 0 5px #ff7a00,
+      0 0 10px #ff7a00,
+      0 0 20px #ff3b00,
+      0 0 30px #ff00aa;
+  }
+  50% {
+    text-shadow:
+      0 0 5px #00e5ff,
+      0 0 10px #00e5ff,
+      0 0 20px #7c3aed,
+      0 0 30px #ff7a00;
+  }
+  100% {
+    text-shadow:
+      0 0 5px #ff7a00,
+      0 0 10px #ff7a00,
+      0 0 20px #ff3b00,
+      0 0 30px #ff00aa;
+  }
+}
+
+.neon-logo-match {
+  color: #ffffff !important;
+  animation: glowRGB 2.2s infinite alternate;
+  font-weight: bold;
+}
